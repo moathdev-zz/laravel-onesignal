@@ -1,0 +1,23 @@
+{
+  "name": "moathdev/laravel-onesignal",
+  "description": "A Onesignal package for Laravel 5.2 or higher",
+  "type": "package",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "moathdev",
+      "email": "Moath@moath.co"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.5.0",
+    "illuminate/support": "~5.1",
+    "guzzlehttp/guzzle": "~5.3|~6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Moathdev\\OneSignal\\": "src/"
+    }
+  }
+}
