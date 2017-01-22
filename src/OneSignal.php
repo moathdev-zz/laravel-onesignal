@@ -75,5 +75,59 @@ class  OneSignal
         return $res;
     }
 
+    /**
+     * @param $title - Required
+     * @param $massage - Required
+     * @param array $OneSignalIds - Required | array
+     * @param array $data - Optional | array
+     * @param  $url - Optional
+     * @param  $buttons - Optional
+     * @return mixed
+     * @throws FailedToSendNotificationException
+     */
+    public function SendNotificationToSpecificUsers($title, $massage, array $OneSignalIds, array $data = null, $url = null, $buttons = null)
+    {
+
+        $params = [
+            'app_id' => $this->appId,
+            'include_player_ids' => $OneSignalIds,
+            'headings' => [
+                'en' => $title
+            ],
+            'contents' => [
+                'en' => $massage
+            ],
+        ];
+
+        if (isset($data)) {
+            $params['data'] = $data;
+        }
+
+        if (isset($url)) {
+            $params['url'] = $url;
+        }
+
+        if (isset($button)) {
+            $params['buttons'] = $buttons;
+        }
+
+        try {
+
+            $res = $this->client->post($this->Url.'notifications', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => $this->Authorization,
+                ],
+                'body' => json_encode($params)
+            ]);
+        } catch (FailedToSendNotificationException $e) {
+
+            throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
+
+        }
+
+        return $res;
+    }
+
 
 } // End Class
