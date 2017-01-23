@@ -34,7 +34,7 @@ Route::get('/', function (OneSignal $oneSignal) {
     dd($res);
 });
  ````
- ##Issues
+##Issues
 
 ````
 
