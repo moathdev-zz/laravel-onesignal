@@ -5,7 +5,7 @@ A Onesignal package for Laravel 5.2 or higher
 ##Installation
 
 ````
-composer require moathdev/sweetalert
+composer require moathdev/laravel-onesignal
 ````
 
 Setting up your OneSignal account on your  **Environment** file
