@@ -8,7 +8,7 @@ A Onesignal package for Laravel 5.2 or higher
 composer require moathdev/sweetalert
 ````
 
-Setting up your OneSignal account on your  Enverament file
+Setting up your OneSignal account on your  **Environment** file
 
 ````
 ONESIGNAL_APP_ID=759xxxxxxx
