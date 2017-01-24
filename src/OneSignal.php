@@ -4,6 +4,7 @@ namespace Moathdev\OneSignal;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class  OneSignal
 {
@@ -66,7 +67,7 @@ class  OneSignal
                 ],
                 'body' => json_encode($params)
             ]);
-        } catch (FailedToSendNotificationException $e) {
+        } catch (ClientException $e) {
 
             throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
 
@@ -120,7 +121,7 @@ class  OneSignal
                 ],
                 'body' => json_encode($params)
             ]);
-        } catch (FailedToSendNotificationException $e) {
+        } catch (ClientException $e) {
 
             throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
 
