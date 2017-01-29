@@ -19,6 +19,7 @@ class  OneSignal
     {
         $this->client = $client;
         $this->appId = env('ONESIGNAL_APP_ID');
+        $this->API_KEY = 'Basic ' . env('ONESIGNAL_API_KEY');
         $this->Authorization = 'Basic ' . env('ONESIGNAL_AUTHORIZATION');
         $this->Url = env('ONESIGNAL_API_URL', 'https://onesignal.com/api/v1/');
     }
@@ -135,7 +136,7 @@ class  OneSignal
             return $this->client->post($this->Url . $action, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => $this->Authorization,
+                    'Authorization' => $this->API_KEY,
                 ],
                 'body' => json_encode($params)
             ]);
@@ -150,7 +151,7 @@ class  OneSignal
             return $this->client->delete($this->Url . $action . '/' . $Notification_id . '?app_id=' . $this->appId, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => $this->Authorization,
+                    'Authorization' => $this->API_KEY,
                 ],
             ]);
         } catch (ClientException $e) {
