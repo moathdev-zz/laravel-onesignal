@@ -33,7 +33,7 @@ ONESIGNAL_APP_ID=759xxxxxxx
 ONESIGNAL_API_KEY=MjYzxxxxxx
 
 - User Auth Key -
-Authorization=ZMOADxxxxxx
+ONESIGNAL_USER_AUTH_KEY=ZMOADxxxxxx
 
 ````
 ##Example Usage
