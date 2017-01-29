@@ -13,7 +13,11 @@ Setting up your OneSignal account on your  **Environment** file
 ````
 ONESIGNAL_APP_ID=759xxxxxxx
 
-ONESIGNAL_AUTHORIZATION=MjYzxxxxxx
+ONESIGNAL_API_KEY=MjYzxxxxxx
+
+- User Auth Key -
+Authorization=ZMOADxxxxxx
+
 ````
 ##Example Usage
 ````
