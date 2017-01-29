@@ -7,6 +7,23 @@ A Onesignal package for Laravel 5.2 or higher
 ````
 composer require moathdev/laravel-onesignal
 ````
+After install this package you have to set the service provider on your config/app.php file
+
+````
+Moathdev\OneSignal\ServiceProvider::class,
+````
+
+add an alias in your `config/app.php`:
+
+````
+'OneSignal' => \Moathdev\OneSignal\Facade\OneSignal::class
+````
+Then you just need to publish files ! Copy and paste it
+
+````
+php artisan vendor:publish --provider="Moathdev\OneSignal\ServiceProvider"
+````
+
 
 Setting up your OneSignal account on your  **Environment** file
 
@@ -25,11 +42,10 @@ use Moathdev\OneSignal\FailedToSendNotificationException;
 use Moathdev\OneSignal\OneSignal;
 
 
-Route::get('/', function (OneSignal $oneSignal) {
+Route::get('/', function () {
     try {
 
-        $res = $oneSignal->SendNotificationToAll('Hello', 'World', [
-        ]);
+        $res = OneSignal::SendNotificationToAll('Hello', 'World');
 
     } catch (FailedToSendNotificationException $e) {
 
