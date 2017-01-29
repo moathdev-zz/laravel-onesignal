@@ -108,7 +108,16 @@ class  OneSignal
 
     public function CancelNotification($Notification_id)
     {
-        $res = $this->delete($Notification_id,'notifications');
+        $res = $this->delete($Notification_id, 'notifications');
+
+        return $res->getBody()->getContents();
+
+    }
+
+
+    public function ViewApps()
+    {
+        $res = $this->get('apps');
 
         return $res->getBody()->getContents();
 
@@ -138,14 +147,28 @@ class  OneSignal
     public function delete($Notification_id, $action)
     {
         try {
-            return $this->client->delete($this->Url . $action.'/'.$Notification_id.'?app_id='. $this->appId, [
+            return $this->client->delete($this->Url . $action . '/' . $Notification_id . '?app_id=' . $this->appId, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Authorization' => $this->Authorization,
                 ],
             ]);
         } catch (ClientException $e) {
-            throw new FailedToSendNotificationException('Failed to delete notification: '  . $Notification_id . ' .', 0, $e);
+            throw new FailedToSendNotificationException('Failed to delete notification: ' . $Notification_id . ' .', 0, $e);
+        }
+    }
+
+    public function get($action)
+    {
+        try {
+            return $this->client->get($this->Url . $action, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => $this->Authorization,
+                ],
+            ]);
+        } catch (ClientException $e) {
+            throw new FailedToSendNotificationException('Failed to get' . $action, 0, $e);
         }
     }
 
