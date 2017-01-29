@@ -5,6 +5,7 @@ namespace Moathdev\OneSignal;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Psr\Http\Message\ResponseInterface;
 
 class  OneSignal
 {
@@ -19,7 +20,7 @@ class  OneSignal
         $this->client = $client;
         $this->appId = env('ONESIGNAL_APP_ID');
         $this->Authorization = 'Basic ' . env('ONESIGNAL_AUTHORIZATION');
-        $this->Url = env('ONESIGNAL_API_URL','https://onesignal.com/api/v1/');
+        $this->Url = env('ONESIGNAL_API_URL', 'https://onesignal.com/api/v1/');
     }
 
 
@@ -58,22 +59,9 @@ class  OneSignal
             $params['buttons'] = $buttons;
         }
 
-        try {
+        $res = $this->post($params, 'notifications');
 
-            $res = $this->client->post($this->Url.'notifications', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => $this->Authorization,
-                ],
-                'body' => json_encode($params)
-            ]);
-        } catch (ClientException $e) {
-
-            throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
-
-        }
-
-        return $res;
+        return $res->getBody()->getContents();
     }
 
     /**
@@ -112,9 +100,30 @@ class  OneSignal
             $params['buttons'] = $buttons;
         }
 
-        try {
+        $res = $this->post($params, 'notifications');
 
-            $res = $this->client->post($this->Url.'notifications', [
+        return $res->getBody()->getContents();
+    }
+
+
+    public function CancelNotification($Notification_id)
+    {
+        $res = $this->delete($Notification_id,'notifications');
+
+        return $res->getBody()->getContents();
+
+    }
+
+    /**
+     * @param $params
+     * @param $action
+     * @return ResponseInterface
+     * @throws FailedToSendNotificationException
+     */
+    public function post($params, $action)
+    {
+        try {
+            return $this->client->post($this->Url . $action, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Authorization' => $this->Authorization,
@@ -122,12 +131,22 @@ class  OneSignal
                 'body' => json_encode($params)
             ]);
         } catch (ClientException $e) {
-
             throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
-
         }
+    }
 
-        return $res;
+    public function delete($Notification_id, $action)
+    {
+        try {
+            return $this->client->delete($this->Url . $action.'/'.$Notification_id.'?app_id='. $this->appId, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => $this->Authorization,
+                ],
+            ]);
+        } catch (ClientException $e) {
+            throw new FailedToSendNotificationException('Failed to delete notification: '  . $Notification_id . ' .', 0, $e);
+        }
     }
 
 
