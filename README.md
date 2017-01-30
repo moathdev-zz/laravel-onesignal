@@ -13,8 +13,7 @@ After install this package you have to set the service provider on your config/a
 Moathdev\OneSignal\ServiceProvider::class,
 ````
 
-add an alias in your `config/app.php`:
-
+To use the facade add this to the facades in app/config/app.php
 ````
 'OneSignal' => \Moathdev\OneSignal\Facade\OneSignal::class
 ````

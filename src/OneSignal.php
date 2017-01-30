@@ -23,13 +23,13 @@ class OneSignal
 
         $this->client = $client;
 
-        $this->appId = $config->get('oneSignal-moath.appId');
+        $this->appId = $config->get('oneSignal.appId');
 
         $this->API_KEY = 'Basic ' . env('ONESIGNAL_API_KEY');
 
-        $this->Authorization = 'Basic ' . base64_encode($config->get('oneSignal-moath.user_auth_key'));
+        $this->Authorization = 'Basic ' . base64_encode($config->get('oneSignal.user_auth_key'));
 
-        $this->Url = $config->get('oneSignal-moath.url');
+        $this->Url = $config->get('oneSignal.url');
     }
 
 

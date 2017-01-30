@@ -15,14 +15,25 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/../config/oneSignal-moath.php' => $this->app('config')->get('oneSignal-moath.php'),
-        ], 'config');
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/oneSignal-moath.php', 'oneSignal-moath');
-
-        $this->app->bind(OneSignal::class, function (Container $app){
+        $this->app->bind(OneSignal::class, function (Container $app) {
             return new OneSignal($app->make(Client::class), $app);
         });
+    }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $source = realpath(__DIR__ . '/../config/oneSignal.php');
+
+        $this->publishes([$source => config_path('oneSignal.php')]);
+
+        $this->mergeConfigFrom($source, 'oneSignal');
+
+
     }
 }
