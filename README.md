@@ -37,8 +37,8 @@ ONESIGNAL_USER_AUTH_KEY=ZMOADxxxxxx
 ````
 ##Example Usage
 ````
-use Moathdev\OneSignal\FailedToSendNotificationException;
-use Moathdev\OneSignal\OneSignal;
+use Moathdev\OneSignal\Exceptions\FailedToSendNotificationException;
+use Moathdev\OneSignal\Facade\OneSignal;
 
 
 Route::get('/', function () {
