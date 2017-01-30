@@ -5,9 +5,11 @@ namespace Moathdev\OneSignal;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Contracts\Container\Container;
+use Moathdev\OneSignal\Exceptions\FailedToSendNotificationException;
 use Psr\Http\Message\ResponseInterface;
 
-class  OneSignal
+class OneSignal
 {
 
     /**
@@ -15,13 +17,19 @@ class  OneSignal
      */
     private $client;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, Container $app)
     {
+        $config = $app->make('config');
+
         $this->client = $client;
-        $this->appId = env('ONESIGNAL_APP_ID');
+
+        $this->appId = $config->get('oneSignal-moath.appId');
+
         $this->API_KEY = 'Basic ' . env('ONESIGNAL_API_KEY');
-        $this->Authorization = 'Basic ' . env('ONESIGNAL_AUTHORIZATION');
-        $this->Url = env('ONESIGNAL_API_URL', 'https://onesignal.com/api/v1/');
+
+        $this->Authorization = 'Basic ' . base64_encode($config->get('oneSignal-moath.user_auth_key'));
+
+        $this->Url = $config->get('oneSignal-moath.url');
     }
 
 
