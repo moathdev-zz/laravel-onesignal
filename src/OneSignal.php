@@ -27,7 +27,7 @@ class OneSignal
 
         $this->API_KEY = 'Basic ' . env('ONESIGNAL_API_KEY');
 
-        $this->Authorization = 'Basic ' . base64_encode($config->get('oneSignal.user_auth_key'));
+        $this->Authorization = 'Basic ' . $config->get('oneSignal.user_auth_key');
 
         $this->Url = $config->get('oneSignal.url');
     }
@@ -42,7 +42,7 @@ class OneSignal
      * @return mixed
      * @throws FailedToSendNotificationException
      */
-    public function SendNotificationToAll($title, $massage, array $data = null, $url = null, $buttons = null)
+    public function SendNotificationToAll($title, $massage, $data = [], $url = null, $buttons = null)
     {
 
         $params = [
@@ -68,7 +68,7 @@ class OneSignal
             $params['buttons'] = $buttons;
         }
 
-        $res = $this->post($params, 'notifications');
+        $res = $this->post($params, 'notifications', $this->API_KEY);
 
         return $res->getBody()->getContents();
     }
@@ -83,7 +83,7 @@ class OneSignal
      * @return mixed
      * @throws FailedToSendNotificationException
      */
-    public function SendNotificationToSpecificUsers($title, $massage, array $OneSignalIds, array $data = null, $url = null, $buttons = null)
+    public function SendNotificationToSpecificUsers($title, $massage, $OneSignalIds = [], $data = [], $url = null, $buttons = null)
     {
 
         $params = [
@@ -109,12 +109,16 @@ class OneSignal
             $params['buttons'] = $buttons;
         }
 
-        $res = $this->post($params, 'notifications');
+        $res = $this->post($params, 'notifications', $this->API_KEY);
 
         return $res->getBody()->getContents();
     }
 
 
+    /**
+     * @param $Notification_id
+     * @return string
+     */
     public function CancelNotification($Notification_id)
     {
         $res = $this->delete($Notification_id, 'notifications');
@@ -124,6 +128,9 @@ class OneSignal
     }
 
 
+    /**
+     * @return string
+     */
     public function ViewApps()
     {
         $res = $this->get('apps');
@@ -133,18 +140,56 @@ class OneSignal
     }
 
     /**
+     * @return string
+     */
+    public function ViewApp()
+    {
+        $res = $this->get('apps/' . $this->appId);
+
+        return $res->getBody()->getContents();
+
+    }
+
+
+    /**
+     * @param $app_name
+     * @param array $params
+     * @return string
+     */
+    public function CreateApp($app_name, $params = [])
+    {
+        $data = [
+            'name' => $app_name,
+        ];
+
+        $data = array_merge($data, $params);
+
+        $res = $this->post($data, 'apps', $this->Authorization);
+
+        return $res->getBody()->getContents();
+    }
+
+    public function UpdateApp($app_id, $params)
+    {
+        $res = $this->put($params, 'apps/' . $app_id, $this->Authorization);
+
+        return $res->getBody()->getContents();
+    }
+
+    /**
      * @param $params
      * @param $action
+     * @param $auth
      * @return ResponseInterface
      * @throws FailedToSendNotificationException
      */
-    public function post($params, $action)
+    public function post($params, $action, $auth)
     {
         try {
             return $this->client->post($this->Url . $action, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => $this->API_KEY,
+                    'Authorization' => $auth,
                 ],
                 'body' => json_encode($params)
             ]);
@@ -153,6 +198,12 @@ class OneSignal
         }
     }
 
+    /**
+     * @param $Notification_id
+     * @param $action
+     * @return ResponseInterface
+     * @throws FailedToSendNotificationException
+     */
     public function delete($Notification_id, $action)
     {
         try {
@@ -167,6 +218,12 @@ class OneSignal
         }
     }
 
+
+    /**
+     * @param $action
+     * @return ResponseInterface
+     * @throws FailedToSendNotificationException
+     */
     public function get($action)
     {
         try {
@@ -178,6 +235,21 @@ class OneSignal
             ]);
         } catch (ClientException $e) {
             throw new FailedToSendNotificationException('Failed to get' . $action, 0, $e);
+        }
+    }
+
+    public function put($params, $action, $auth)
+    {
+        try {
+            return $this->client->put($this->Url . $action, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => $auth,
+                ],
+                'body' => json_encode($params)
+            ]);
+        } catch (ClientException $e) {
+            throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
         }
     }
 

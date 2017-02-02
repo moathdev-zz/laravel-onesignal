@@ -53,7 +53,7 @@ Route::get('/', function () {
     dd($res);
 });
  ````
-Methods supported by this package and their parameters can be found in the [API Reference](https://documentation.onesignal.com/docs/server-api-overview) 
+Methods supported by this package and their parameters can be found in the [API Reference](https://documentation.onesignal.com/reference) 
 ##Issues
 
 ````
