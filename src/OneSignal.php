@@ -34,6 +34,7 @@ class OneSignal
 
 
     /**
+     * https://documentation.onesignal.com/reference#create-notification
      * @param $title - Required
      * @param $massage - Required
      * @param $data - Optional | array
@@ -74,6 +75,7 @@ class OneSignal
     }
 
     /**
+     * https://documentation.onesignal.com/reference#create-notification
      * @param $title - Required
      * @param $massage - Required
      * @param array $OneSignalIds - Required | array
@@ -83,8 +85,14 @@ class OneSignal
      * @return mixed
      * @throws FailedToSendNotificationException
      */
-    public function SendNotificationToSpecificUsers($title, $massage, $OneSignalIds = [], $data = [], $url = null, $buttons = null)
-    {
+    public function SendNotificationToSpecificUsers(
+        $title,
+        $massage,
+        $OneSignalIds = [],
+        $data = [],
+        $url = null,
+        $buttons = null
+    ) {
 
         $params = [
             'app_id' => $this->appId,
@@ -116,6 +124,7 @@ class OneSignal
 
 
     /**
+     * https://documentation.onesignal.com/reference#cancel-notification
      * @param $Notification_id
      * @return string
      */
@@ -129,22 +138,24 @@ class OneSignal
 
 
     /**
+     * https://documentation.onesignal.com/reference#view-apps-apps
      * @return string
      */
     public function ViewApps()
     {
-        $res = $this->get('apps');
+        $res = $this->get('apps', $this->Authorization);
 
         return $res->getBody()->getContents();
 
     }
 
     /**
+     * https://documentation.onesignal.com/reference#view-an-app
      * @return string
      */
     public function ViewApp()
     {
-        $res = $this->get('apps/' . $this->appId);
+        $res = $this->get('apps/' . $this->appId, $this->Authorization);
 
         return $res->getBody()->getContents();
 
@@ -152,6 +163,7 @@ class OneSignal
 
 
     /**
+     * https://documentation.onesignal.com/reference#create-an-app
      * @param $app_name
      * @param array $params
      * @return string
@@ -169,12 +181,35 @@ class OneSignal
         return $res->getBody()->getContents();
     }
 
+    /**
+     * https://documentation.onesignal.com/reference#update-an-app
+     * @param $app_id
+     * @param $params
+     * @return mixed
+     * @throws \Moathdev\OneSignal\Exceptions\FailedToSendNotificationException
+     */
     public function UpdateApp($app_id, $params)
     {
         $res = $this->put($params, 'apps/' . $app_id, $this->Authorization);
 
         return $res->getBody()->getContents();
     }
+
+    /**
+     * https://documentation.onesignal.com/reference#view-devices
+     * Note : Unavailable for Apps > 100,000 users .
+     * @param null $limit | How many devices to return. Max is 300. Default is 300 .
+     * @param null $offset | Result offset. Default is 0. Results are sorted by id .
+     * @return mixed
+     * @throws \Moathdev\OneSignal\Exceptions\FailedToSendNotificationException
+     */
+    public function ViewDevices($limit = null, $offset = null)
+    {
+        $res = $this->get('players?app_id=' . $this->appId . '&limit=' . $limit . '&offset=' . $offset, $this->API_KEY);
+
+        return $res->getBody()->getContents();
+    }
+
 
     /**
      * @param $params
@@ -214,23 +249,25 @@ class OneSignal
                 ],
             ]);
         } catch (ClientException $e) {
-            throw new FailedToSendNotificationException('Failed to delete notification: ' . $Notification_id . ' .', 0, $e);
+            throw new FailedToSendNotificationException('Failed to delete notification: ' . $Notification_id . ' .', 0,
+                $e);
         }
     }
 
 
     /**
      * @param $action
-     * @return ResponseInterface
-     * @throws FailedToSendNotificationException
+     * @param $auth
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Moathdev\OneSignal\Exceptions\FailedToSendNotificationException
      */
-    public function get($action)
+    public function get($action, $auth)
     {
         try {
             return $this->client->get($this->Url . $action, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => $this->Authorization,
+                    'Authorization' => $auth,
                 ],
             ]);
         } catch (ClientException $e) {
