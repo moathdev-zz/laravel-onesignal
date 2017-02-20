@@ -24,7 +24,7 @@ class OneSignal
         
         $this->appId = $config->get('oneSignal.appId');
         
-        $this->API_KEY = 'Basic ' . env('ONESIGNAL_API_KEY');
+        $this->API_KEY = 'Basic ' . $config->get('oneSignal.ONESIGNAL_APP_KEY');
         
         $this->Authorization = 'Basic ' . $config->get('oneSignal.user_auth_key');
         
@@ -236,6 +236,12 @@ class OneSignal
     public function UpdateDevice($device_id, $params)
     {
         return $this->put($params, 'players/' . $device_id, $this->Authorization);
+    }
+
+
+    public function TrackOpen($notificationId , $opened = true)
+    {
+        return $this->put($opened,'notifications/'.$notificationId, $this->appId);
     }
     
     
